@@ -18,17 +18,20 @@ public class TestServiceImpl implements TestService {
         ioService.printFormattedLine("Please answer the questions below%n");
 
         List<Question> questions = questionDao.findAll();
-
         for (int i = 0; i < questions.size(); i++) {
-            Question question = questions.get(i);
-            ioService.printFormattedLine("Question %d: %s", i + 1, question.text());
-
-            List<Answer> answers = question.answers();
-            for (int j = 0; j < answers.size(); j++) {
-                Answer answer = answers.get(j);
-                ioService.printFormattedLine("  %d) %s", j + 1, answer.text());
-            }
-            ioService.printLine("");
+            String questionText = convertQuestionToString(questions.get(i), i + 1);
+            ioService.printLine(questionText);
         }
+    }
+    private String convertQuestionToString(Question question, int questionNumber) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Question %d: %s%n", questionNumber, question.getText()));
+
+        List<Answer> answers = question.getAnswers();
+        for (int i = 0; i < answers.size(); i++) {
+            sb.append(String.format("  %d) %s%n", i + 1, answers.get(i).getText()));
+        }
+
+        return sb.toString();
     }
 }
